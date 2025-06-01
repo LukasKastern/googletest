@@ -23,6 +23,24 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(gtest);
 
+    const gmock = b.addStaticLibrary(.{
+        .name = "gmock",
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
+    gmock.linkLibCpp();
+    gmock.addCSourceFile(.{
+        .file = googletest_dep.path("googlemock/src/gmock-all.cc"),
+        .flags = &.{},
+    });
+    gmock.addIncludePath(googletest_dep.path("googlemock/include"));
+    gmock.addIncludePath(googletest_dep.path("googlemock"));
+    gmock.installHeadersDirectory(googletest_dep.path("googlemock/include"), ".", .{});
+
+    gmock.linkLibrary(gtest);
+    b.installArtifact(gmock);
+
     const gtest_main = b.addStaticLibrary(.{
         .name = "gtest_main",
         .target = target,
