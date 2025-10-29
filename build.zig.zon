@@ -1,5 +1,6 @@
 .{
-    .name = "googletest",
+    .name = .googletest,
+    .fingerprint = 0xc36e6f7a9bb39c58,
     .version = "1.15.2",
     .dependencies = .{
         .googletest = .{

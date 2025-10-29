@@ -6,13 +6,15 @@ pub fn build(b: *std.Build) void {
 
     const googletest_dep = b.dependency("googletest", .{});
 
-    const gtest = b.addStaticLibrary(.{
+    const gtest = b.addLibrary(.{
         .name = "gtest",
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+            .link_libcpp = true,
+        }),
     });
-    gtest.linkLibCpp();
     gtest.addCSourceFile(.{
         .file = googletest_dep.path("googletest/src/gtest-all.cc"),
         .flags = &.{},
@@ -23,13 +25,15 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(gtest);
 
-    const gtest_main = b.addStaticLibrary(.{
+    const gtest_main = b.addLibrary(.{
         .name = "gtest_main",
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+            .link_libcpp = true,
+        }),
     });
-    gtest_main.linkLibCpp();
     gtest_main.addCSourceFile(.{
         .file = googletest_dep.path("googletest/src/gtest_main.cc"),
         .flags = &.{},
